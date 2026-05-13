@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Routes, Route, Link, useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { Heart, ChevronRight, Search, AlertCircle, ArrowLeft, Gift, Wallet, Cake, Loader2, CheckCircle2, MoreVertical, Filter, RefreshCw, ChevronLeft, ChevronDown, X, ChevronRight as ChevronRightIcon } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { getApiUrl } from '../lib/api';
 import { motion, AnimatePresence } from 'motion/react';
 import AnnualCashGiftManagement from './AnnualCashGiftManagement';
 import SocialPensionManagement from './SocialPensionManagement';
@@ -88,7 +89,7 @@ function CitizenSelectionTable() {
     try {
       const token = localStorage.getItem('token');
       // Fetch a larger dataset for selection
-      const response = await fetch('https://api-dbosca.drchiocms.com/api/masterlist?per_page=5000', {
+      const response = await fetch(getApiUrl('/masterlist?per_page=5000'), {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Accept': 'application/json'

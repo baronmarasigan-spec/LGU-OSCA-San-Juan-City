@@ -20,7 +20,7 @@ import {
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from './lib/utils';
 
-import { Application } from './App';
+import { getApiUrl } from './lib/api';
 
 export default function RegistrationForm({ 
   onComplete, 
@@ -328,7 +328,7 @@ export default function RegistrationForm({
     const payload = buildPayload(formData);
 
     try {
-      const response = await fetch("/api/proxy/dbosca/applications", {
+      const response = await fetch(getApiUrl("/proxy/dbosca/applications"), {
         method: "POST",
         headers: {
           "Accept": "application/json"

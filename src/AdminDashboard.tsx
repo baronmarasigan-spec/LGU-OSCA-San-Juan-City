@@ -30,6 +30,7 @@ import {
   Users
 } from 'lucide-react';
 import { cn, normalizeCashGiftResponse } from './lib/utils';
+import { getApiUrl } from './lib/api';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 import { Application } from './App';
@@ -144,7 +145,7 @@ export default function AdminDashboard({
     return [];
   };
 
-  const fileBaseURL = "/api/proxy/dbosca/view-file?path=";
+  const fileBaseURL = getApiUrl("/proxy/dbosca/view-file?path=");
 
   const getBarangayFromAddress = (address?: string) => {
     if (!address) return 'N/A';
@@ -322,7 +323,7 @@ export default function AdminDashboard({
       // 2. Pending ID Issuances
       let idList: any[] = [];
       try {
-        const idRes = await fetch("/api/proxy/dbosca/id-issuances", { headers });
+        const idRes = await fetch(getApiUrl("/proxy/dbosca/id-issuances"), { headers });
         if (idRes.status === 429) {
           console.warn("Throttled: ID fetch returned 429");
         } else if (idRes.ok) {
@@ -345,7 +346,7 @@ export default function AdminDashboard({
       // 3. Pending Benefits (Annual Cash Gift as priority)
       let appsArray: any[] = [];
       try {
-        const annualRes = await fetch("/api/proxy/dbosca/benefit-applications", { headers });
+        const annualRes = await fetch(getApiUrl("/proxy/dbosca/benefit-applications"), { headers });
         if (annualRes.status === 429) {
           console.warn("Throttled: Benefits fetch returned 429");
         } else if (annualRes.ok) {
@@ -368,7 +369,7 @@ export default function AdminDashboard({
       // 4. Feedback
       let feedbacks: any[] = [];
       try {
-        const feedbackRes = await fetch("/api/proxy/dbosca/feedback-concerns", { headers });
+        const feedbackRes = await fetch(getApiUrl("/proxy/dbosca/feedback-concerns"), { headers });
         if (feedbackRes.ok) {
           const feedbackData = await feedbackRes.json();
           feedbacks = Array.isArray(feedbackData.data) ? feedbackData.data : [];
@@ -423,7 +424,7 @@ export default function AdminDashboard({
         params.append('name', search);
       }
       
-      const response = await fetch(`/api/proxy/lcr?${params.toString()}`);
+      const response = await fetch(getApiUrl(`/proxy/lcr?${params.toString()}`));
       if (!response.ok) throw new Error("Failed to fetch LCR data through proxy");
       const result = await response.json();
       
@@ -475,7 +476,7 @@ export default function AdminDashboard({
       // 2. Masterlist Stats
       let masterArray: any[] = [];
       try {
-        const masterRes = await fetch("/api/proxy/dbosca/masterlist", { headers });
+        const masterRes = await fetch(getApiUrl("/proxy/dbosca/masterlist"), { headers });
         if (masterRes.status === 429) {
           console.warn("Throttled: Masterlist fetch returned 429");
         } else if (masterRes.ok) {
@@ -499,7 +500,7 @@ export default function AdminDashboard({
       // 3. Benefit Stats
       let annualCount = 0;
       try {
-        const annualRes = await fetch("/api/proxy/dbosca/benefit-applications", { headers });
+        const annualRes = await fetch(getApiUrl("/proxy/dbosca/benefit-applications"), { headers });
         if (annualRes.ok) {
           const annualData = await annualRes.json();
           const annualApps = normalizeCashGiftResponse(annualData);
@@ -509,7 +510,7 @@ export default function AdminDashboard({
 
       let pensionCount = 0;
       try {
-        const pensionRes = await fetch("/api/proxy/dbosca/social-pension", { headers });
+        const pensionRes = await fetch(getApiUrl("/proxy/dbosca/social-pension"), { headers });
         if (pensionRes.ok) {
           const pensionData = await pensionRes.json();
           const pensionArray = pensionData.data?.data || pensionData.data || pensionData;
@@ -519,7 +520,7 @@ export default function AdminDashboard({
       
       let weddingCount = 0;
       try {
-        const weddingRes = await fetch("/api/proxy/dbosca/wedding-anniversary-incentives", { headers });
+        const weddingRes = await fetch(getApiUrl("/proxy/dbosca/wedding-anniversary-incentives"), { headers });
         if (weddingRes.ok) {
           const weddingData = await weddingRes.json();
           const weddingArray = weddingData.data?.data || weddingData.data || weddingData;
@@ -530,7 +531,7 @@ export default function AdminDashboard({
       // Feedback Stats
       let feedbacks: any[] = [];
       try {
-        const feedbackRes = await fetch("/api/proxy/dbosca/feedback-concerns", { headers });
+        const feedbackRes = await fetch(getApiUrl("/proxy/dbosca/feedback-concerns"), { headers });
         if (feedbackRes.ok) {
           const feedbackData = await feedbackRes.json();
           const feedbacksRaw = feedbackData.data || [];
@@ -795,7 +796,7 @@ export default function AdminDashboard({
       }
 
       // In Registration Management, we are always dealing with applications
-      const endpoint = `/api/proxy/dbosca/applications/${id}`;
+      const endpoint = getApiUrl(`/proxy/dbosca/applications/${id}`);
 
       const res = await fetch(endpoint, {
         method: "PUT",
@@ -945,8 +946,8 @@ export default function AdminDashboard({
       // Determine endpoint and ID
       const targetId = updatedApp.citizen_id || updatedApp.id;
       const endpoint = updatedApp.citizen_id 
-        ? `/api/proxy/dbosca/masterlist/${targetId}`
-        : `/api/proxy/dbosca/applications/${targetId}`;
+        ? getApiUrl(`/proxy/dbosca/masterlist/${targetId}`)
+        : getApiUrl(`/proxy/dbosca/applications/${targetId}`);
 
       const res = await fetch(endpoint, fetchOptions);
 
@@ -1024,8 +1025,8 @@ export default function AdminDashboard({
 
       // Check if we are deleting from Masterlist (using activeTab)
       const endpoint = activeTab === 'Masterlist' 
-        ? `/api/proxy/dbosca/masterlist/${deletingId}`
-        : `/api/proxy/dbosca/applications/${deletingId}`;
+        ? getApiUrl(`/proxy/dbosca/masterlist/${deletingId}`)
+        : getApiUrl(`/proxy/dbosca/applications/${deletingId}`);
 
       const res = await fetch(endpoint, {
         method: "DELETE",
@@ -1072,7 +1073,7 @@ export default function AdminDashboard({
     
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.post(`/api/proxy/dbosca/masterlist/move-to-pending/${citizenId}`, {}, {
+      const response = await axios.post(getApiUrl(`/proxy/dbosca/masterlist/move-to-pending/${citizenId}`), {}, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Accept': 'application/json'
@@ -1118,7 +1119,7 @@ export default function AdminDashboard({
         headers["Authorization"] = `Bearer ${token}`;
       }
 
-      const res = await fetch(`/api/proxy/dbosca/auth/admin/reset-password/${userId}`, {
+      const res = await fetch(getApiUrl(`/proxy/dbosca/auth/admin/reset-password/${userId}`), {
         method: "POST",
         headers
       });

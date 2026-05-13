@@ -110,7 +110,8 @@ export default function App() {
         headers["Authorization"] = `Bearer ${token}`;
       }
 
-      const response = await fetch("https://api-dbosca.drchiocms.com/api/applications", {
+      const apiUrl = `${import.meta.env.VITE_API_URL || ""}/api/applications`;
+      const response = await fetch(apiUrl, {
         method: "GET",
         headers
       });

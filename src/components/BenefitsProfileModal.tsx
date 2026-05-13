@@ -27,6 +27,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '../lib/utils';
+import { getApiUrl, getStorageUrl } from '../lib/api';
 import { Application } from '../App';
 import PdfViewer from './PdfViewer';
 
@@ -42,16 +43,14 @@ const formatDate = (date: any) => {
 const getFileUrl = (file: any) => {
   if (!file) return null;
 
-  const storageBaseUrl = "https://api-dbosca.drchiocms.com/storage/";
-
   // If it's a data URL or already absolute, return as is
   if (typeof file === "string" && (file.startsWith('data:') || file.startsWith('http'))) {
     return file;
   }
 
-  // If it starts with /api/, it's already a full view URL from the backend
+  // If it starts with /api/, it's a relative URL
   if (typeof file === "string" && file.startsWith('/api/')) {
-    return `https://api-dbosca.drchiocms.com${file}`;
+    return getApiUrl(file.replace('/api/', '/'));
   }
 
   // If JSON string → parse
@@ -60,7 +59,7 @@ const getFileUrl = (file: any) => {
       const parsed = JSON.parse(file);
       if (Array.isArray(parsed) && parsed.length > 0) {
         const path = parsed[0].path || parsed[0].file_path;
-        return path ? `${storageBaseUrl}${path}` : null;
+        return getStorageUrl(path);
       }
     } catch (e) {
       console.error("JSON parse error in getFileUrl:", e);
@@ -71,7 +70,7 @@ const getFileUrl = (file: any) => {
   if (Array.isArray(file)) {
     if (file.length > 0) {
       const path = file[0].path || file[0].file_path;
-      return path ? `${storageBaseUrl}${path}` : null;
+      return getStorageUrl(path);
     }
     return null;
   }
@@ -80,7 +79,7 @@ const getFileUrl = (file: any) => {
   if (typeof file === "string") {
     // Clean potential quotes
     const cleanPath = file.replace(/^["']|["']$/g, '');
-    return `${storageBaseUrl}${cleanPath}`;
+    return getStorageUrl(cleanPath);
   }
 
   return null;
@@ -146,13 +145,13 @@ const AuthenticatedPreview = ({ path, label }: { path: string, label: string }) 
         const cleanPath = path.includes('/storage/') ? path.split('/storage/')[1] : path;
         
         // If it's a full external URL but not ours
-        if (path.startsWith('http') && !path.includes('api-dbosca.phoenix.com.ph')) {
+        if (path.startsWith('http') && !path.includes('drchiocms.com')) {
            setUrl(path);
            setLoading(false);
            return;
         }
 
-        const response = await fetch(`https://api-dbosca.drchiocms.com/api/view-file?path=${encodeURIComponent(cleanPath)}`, {
+        const response = await fetch(getApiUrl(`/view-file?path=${encodeURIComponent(cleanPath)}`), {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         
@@ -410,13 +409,13 @@ export default function BenefitsProfileModal({
       const isBirthday = regType.includes("birthday");
       
       if (isWedding) {
-        endpoint = `https://api-dbosca.drchiocms.com/api/wedding-anniversary-incentives`;
+        endpoint = getApiUrl("/wedding-anniversary-incentives");
       } else if (isBirthday) {
-        endpoint = `https://api-dbosca.drchiocms.com/api/birthday-incentives`;
+        endpoint = getApiUrl("/birthday-incentives");
       } else if (regType.includes("social pension")) {
-        endpoint = `https://api-dbosca.drchiocms.com/api/social-pension/${application.id}`;
+        endpoint = getApiUrl(`/social-pension/${application.id}`);
       } else {
-        endpoint = `https://api-dbosca.drchiocms.com/api/benefit-applications/${application.id}`;
+        endpoint = getApiUrl(`/benefit-applications/${application.id}`);
       }
 
       const response = await fetch(endpoint, {
@@ -953,7 +952,7 @@ export default function BenefitsProfileModal({
     setIsFetchingFile(true);
     try {
       const token = localStorage.getItem('token');
-      const url = `https://api-dbosca.drchiocms.com/api/view-file?path=${encodeURIComponent(path)}`;
+      const url = getApiUrl(`/view-file?path=${encodeURIComponent(path)}`);
       
       const response = await fetch(url, {
         headers: {

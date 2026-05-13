@@ -19,6 +19,7 @@ import {
 import { motion, AnimatePresence } from 'motion/react';
 import toast from 'react-hot-toast';
 import { cn } from '../lib/utils';
+import { getApiUrl } from '../lib/api';
 import { Application } from '../App';
 
 interface WalkInIdIssuanceModalProps {
@@ -324,7 +325,7 @@ export default function WalkInIdIssuanceModal({
       }
 
       // 4. Send directly as root (DO NOT wrap in { data: fd })
-      const response = await fetch("https://api-dbosca.drchiocms.com/api/id-issuances", {
+      const response = await fetch(getApiUrl("/proxy/dbosca/id-issuances"), {
         method: "POST",
         headers,
         body: fd

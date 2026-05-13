@@ -16,6 +16,7 @@ import {
   Trash2
 } from 'lucide-react';
 import { cn, normalizeCashGiftResponse } from '../lib/utils';
+import { getApiUrl } from '../lib/api';
 import BenefitsProfileModal from './BenefitsProfileModal';
 import { motion, AnimatePresence } from 'motion/react';
 import toast from 'react-hot-toast';
@@ -70,7 +71,7 @@ export default function AnnualCashGiftManagement({
     setIsLoading(true);
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("https://api-dbosca.drchiocms.com/api/benefit-applications", {
+      const response = await fetch(getApiUrl("/benefit-applications"), {
         headers: {
           "Accept": "application/json",
           "Authorization": `Bearer ${token}`
@@ -145,7 +146,7 @@ export default function AnnualCashGiftManagement({
         disbursement_status: apiStatus,
       };
 
-      const response = await fetch(`https://api-dbosca.drchiocms.com/api/benefit-applications/${id}`, {
+      const response = await fetch(getApiUrl(`/benefit-applications/${id}`), {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -205,7 +206,7 @@ export default function AnnualCashGiftManagement({
       const apiStatus = bulkDisbursementStatus.toLowerCase();
       
       const updatePromises = approvedSelectedIds.map(id => 
-        fetch(`https://api-dbosca.drchiocms.com/api/benefit-applications/${id}`, {
+        fetch(getApiUrl(`/benefit-applications/${id}`), {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -305,7 +306,7 @@ export default function AnnualCashGiftManagement({
       // Laravel PUT override
       fd.append("_method", "PUT");
       
-      const response = await fetch(`https://api-dbosca.drchiocms.com/api/benefit-applications/${id}`, {
+      const response = await fetch(getApiUrl(`/benefit-applications/${id}`), {
         method: "POST",
         headers: {
           "Accept": "application/json",
@@ -385,8 +386,8 @@ export default function AnnualCashGiftManagement({
       const token = localStorage.getItem("token");
       const isNew = !updatedApp.id;
       const url = isNew 
-        ? "https://api-dbosca.drchiocms.com/api/benefit-applications" 
-        : `https://api-dbosca.drchiocms.com/api/benefit-applications/${updatedApp.id}`;
+        ? getApiUrl("/benefit-applications") 
+        : getApiUrl(`/benefit-applications/${updatedApp.id}`);
       
       const fd = new FormData();
       
@@ -453,7 +454,7 @@ export default function AnnualCashGiftManagement({
     setIsProcessingAction(true);
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`https://api-dbosca.drchiocms.com/api/benefit-applications/${id}`, {
+      const response = await fetch(getApiUrl(`/benefit-applications/${id}`), {
         method: "DELETE",
         headers: {
           "Accept": "application/json",

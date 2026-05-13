@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { cn, normalizeBirthdayIncentiveResponse } from '../lib/utils';
 import BenefitsProfileModal from './BenefitsProfileModal';
+import { getApiUrl } from '../lib/api';
 import { motion, AnimatePresence } from 'motion/react';
 import toast from 'react-hot-toast';
 
@@ -70,7 +71,7 @@ export default function BirthdayIncentiveManagement({
     setApplications([]); // Reset state before fetch
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("https://api-dbosca.drchiocms.com/api/birthday-incentives", {
+      const response = await fetch(getApiUrl("/birthday-incentives"), {
         headers: {
           "Accept": "application/json",
           "Authorization": `Bearer ${token}`
@@ -140,7 +141,7 @@ export default function BirthdayIncentiveManagement({
         disbursement_status: status,
       };
 
-      const response = await fetch(`https://api-dbosca.drchiocms.com/api/birthday-incentives/${id}`, {
+      const response = await fetch(getApiUrl(`/birthday-incentives/${id}`), {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -195,7 +196,7 @@ export default function BirthdayIncentiveManagement({
       const token = localStorage.getItem("token");
       
       const updatePromises = approvedSelectedIds.map(id => 
-        fetch(`https://api-dbosca.drchiocms.com/api/birthday-incentives/${id}`, {
+        fetch(getApiUrl(`/birthday-incentives/${id}`), {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -262,7 +263,7 @@ export default function BirthdayIncentiveManagement({
         status: mapStatus(selectedStatus)
       };
 
-      const response = await fetch(`https://api-dbosca.drchiocms.com/api/birthday-incentives/${id}`, {
+      const response = await fetch(getApiUrl(`/birthday-incentives/${id}`), {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -344,8 +345,8 @@ export default function BirthdayIncentiveManagement({
       const token = localStorage.getItem("token");
       const isNew = !updatedApp.id;
       const url = isNew 
-        ? "https://api-dbosca.drchiocms.com/api/birthday-incentives" 
-        : `https://api-dbosca.drchiocms.com/api/birthday-incentives/${updatedApp.id}`;
+        ? getApiUrl("/birthday-incentives") 
+        : getApiUrl(`/birthday-incentives/${updatedApp.id}`);
       
       const mapStatus = (status: string) => {
         const s = String(status || '').toLowerCase();
@@ -430,7 +431,7 @@ export default function BirthdayIncentiveManagement({
     setIsProcessingAction(true);
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`https://api-dbosca.drchiocms.com/api/birthday-incentives/${id}`, {
+      const response = await fetch(getApiUrl(`/birthday-incentives/${id}`), {
         method: "DELETE",
         headers: {
           "Accept": "application/json",
@@ -478,7 +479,7 @@ export default function BirthdayIncentiveManagement({
     setIsLoading(true);
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`https://api-dbosca.drchiocms.com/api/birthday-incentives/${app.id}`, {
+      const response = await fetch(getApiUrl(`/birthday-incentives/${app.id}`), {
         headers: {
           "Accept": "application/json",
           "Authorization": `Bearer ${token}`

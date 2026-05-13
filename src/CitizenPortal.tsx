@@ -8,6 +8,7 @@ import {
   useParams,
 } from "react-router-dom";
 import { Application } from "./App";
+import { getApiUrl } from "./lib/api";
 import {
   User,
   Heart,
@@ -262,7 +263,7 @@ export function AnnualCashGiftForm({
 
     try {
       const response = await fetch(
-        `https://api-dbosca.drchiocms.com/api/masterlist?search=${searchId}`,
+        getApiUrl("/masterlist?search=" + searchId),
         {
           headers: {
             Accept: "application/json",
@@ -396,7 +397,7 @@ export function AnnualCashGiftForm({
       }
 
       const response = await fetch(
-        "/api/proxy/dbosca/benefit-applications",
+        getApiUrl("/proxy/dbosca/benefit-applications"),
         {
           method: "POST",
           headers: {
@@ -1103,7 +1104,7 @@ function CitizenHome() {
         return;
       }
       const idRes = await fetch(
-        `https://api-dbosca.drchiocms.com/api/id-issuances?search=${user.citizen_id}`,
+        getApiUrl("/id-issuances?search=" + user.citizen_id),
         {
           headers: { Authorization: `Bearer ${token}` },
         },
@@ -1393,7 +1394,7 @@ function BenefitSelection() {
       try {
         // Fetch ID Status
         const idRes = await fetch(
-          `https://api-dbosca.drchiocms.com/api/id-issuances?search=${user.citizen_id}`,
+          getApiUrl("/id-issuances?search=" + user.citizen_id),
           { headers: { Authorization: `Bearer ${token}` } }
         );
         if (idRes.ok) {
@@ -1415,10 +1416,10 @@ function BenefitSelection() {
 
         // Fetch All Benefit Applications in parallel
         const endpoints = [
-          { url: "https://api-dbosca.drchiocms.com/api/benefit-applications", type: "benefit-applications" },
-          { url: "https://api-dbosca.drchiocms.com/api/social-pension", type: "social-pension" },
-          { url: "https://api-dbosca.drchiocms.com/api/birthday-incentives", type: "birthday-incentives" },
-          { url: "https://api-dbosca.drchiocms.com/api/wedding-anniversary-incentives", type: "wedding-anniversary-incentives" }
+          { url: getApiUrl("/benefit-applications"), type: "benefit-applications" },
+          { url: getApiUrl("/social-pension"), type: "social-pension" },
+          { url: getApiUrl("/birthday-incentives"), type: "birthday-incentives" },
+          { url: getApiUrl("/wedding-anniversary-incentives"), type: "wedding-anniversary-incentives" }
         ];
 
         const results = await Promise.all(
@@ -1678,7 +1679,7 @@ export function BirthdayIncentiveForm({
 
     try {
       const response = await fetch(
-        `https://api-dbosca.drchiocms.com/api/masterlist?search=${searchId}`,
+        getApiUrl("/masterlist?search=" + searchId),
         {
           headers: {
             Accept: "application/json",
@@ -1851,9 +1852,7 @@ export function BirthdayIncentiveForm({
       });
       fd.append("reg_status", "pending");
 
-      const response = await fetch(
-        "https://api-dbosca.drchiocms.com/api/birthday-incentives",
-        {
+      const response = await fetch(getApiUrl("/birthday-incentives"), {
           method: "POST",
           headers: {
             Accept: "application/json",
@@ -2528,7 +2527,7 @@ export function WeddingAnniversaryForm({
 
     try {
       const response = await fetch(
-        `https://api-dbosca.drchiocms.com/api/masterlist?search=${searchId}`,
+        getApiUrl("/masterlist?search=" + searchId),
         {
           headers: {
             Accept: "application/json",
@@ -2675,9 +2674,7 @@ export function WeddingAnniversaryForm({
         fd.append("marriage_certificate_file", formData.marriage_certificate_path);
       }
 
-      const response = await fetch(
-        "https://api-dbosca.drchiocms.com/api/wedding-anniversary-incentives",
-        {
+      const response = await fetch(getApiUrl("/wedding-anniversary-incentives"), {
           method: "POST",
           headers: {
             Accept: "application/json",
@@ -3470,7 +3467,7 @@ export function SocialPensionForm({
 
     try {
       const response = await fetch(
-        `https://api-dbosca.drchiocms.com/api/masterlist?search=${searchId}`,
+        getApiUrl(`/masterlist?search=${searchId}`),
         {
           headers: {
             Accept: "application/json",
@@ -3600,7 +3597,7 @@ export function SocialPensionForm({
       };
 
       const response = await fetch(
-        "https://api-dbosca.drchiocms.com/api/social-pension",
+        getApiUrl("/social-pension"),
         {
           method: "POST",
           headers: {
@@ -4056,7 +4053,7 @@ function FeedbackForm() {
     if (!token) return;
     try {
       const response = await fetch(
-        "https://api-dbosca.drchiocms.com/api/feedback-concerns",
+        getApiUrl("/feedback-concerns"),
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -4129,7 +4126,7 @@ function FeedbackForm() {
       formDataToSend.append("message", formData.description);
 
       const response = await fetch(
-        "https://api-dbosca.drchiocms.com/api/feedback-concerns",
+        getApiUrl("/feedback-concerns"),
         {
           method: "POST",
           headers: {
@@ -4389,7 +4386,7 @@ function UserProfile() {
       const citizenId = user.citizen_id;
 
       try {
-        const phRes = await fetch(`https://api-dbosca.drchiocms.com/api/philhealth-facilitation?search=${citizenId}`, {
+        const phRes = await fetch(getApiUrl(`/philhealth-facilitation?search=${citizenId}`), {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (phRes.ok) {
@@ -4558,7 +4555,7 @@ function UserProfile() {
       }
 
       const response = await fetch(
-        "https://api-dbosca.drchiocms.com/api/philhealth-facilitation",
+        getApiUrl("/philhealth-facilitation"),
         {
           method: "POST",
           headers: {
@@ -5094,7 +5091,7 @@ function ApplicationIdForm() {
         }
 
         const mlRes = await fetch(
-          `https://api-dbosca.drchiocms.com/api/masterlist?search=${user.citizen_id}`,
+          getApiUrl(`/masterlist?search=${user.citizen_id}`),
           {
             headers: { Authorization: `Bearer ${token}` },
           },
@@ -5196,7 +5193,7 @@ function IdServiceFlow() {
         }
 
         const idRes = await fetch(
-          `https://api-dbosca.drchiocms.com/api/id-issuances?search=${user.citizen_id}`,
+          getApiUrl(`/id-issuances?search=${user.citizen_id}`),
           {
             headers: { Authorization: `Bearer ${token}` },
           },
@@ -5496,7 +5493,7 @@ export default function CitizenPortal({
 
       try {
         // 2. ID Status and Renewal
-        const idRes = await fetch(`https://api-dbosca.drchiocms.com/api/id-issuances?search=${citizenId}`, {
+        const idRes = await fetch(getApiUrl(`/id-issuances?search=${citizenId}`), {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (idRes.ok) {
@@ -5541,7 +5538,7 @@ export default function CitizenPortal({
         }
 
         // 3. Benefit Applications
-        const benRes = await fetch("https://api-dbosca.drchiocms.com/api/benefit-applications", {
+        const benRes = await fetch(getApiUrl("/benefit-applications"), {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (benRes.ok) {
@@ -5565,7 +5562,7 @@ export default function CitizenPortal({
         }
 
         // 4. PhilHealth
-        const phRes = await fetch(`https://api-dbosca.drchiocms.com/api/philhealth-facilitation?search=${citizenId}`, {
+        const phRes = await fetch(getApiUrl(`/philhealth-facilitation?search=${citizenId}`), {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (phRes.ok) {
@@ -5657,7 +5654,7 @@ export default function CitizenPortal({
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
-        "https://api-dbosca.drchiocms.com/api/auth/change-password",
+        getApiUrl("/auth/change-password"),
         {
           method: "POST",
           headers: {

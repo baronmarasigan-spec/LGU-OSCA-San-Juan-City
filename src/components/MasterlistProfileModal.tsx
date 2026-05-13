@@ -26,6 +26,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '../lib/utils';
+import { getApiUrl } from '../lib/api';
 import { Application } from '../App';
 import PdfViewer from './PdfViewer';
 
@@ -412,7 +413,7 @@ export default function MasterlistProfileModal({ application, isOpen, onClose, o
     try {
       const token = localStorage.getItem('token');
       // Updated to use the new view-file API endpoint as per request
-      const url = `https://api-dbosca.drchiocms.com/api/view-file?path=${encodeURIComponent(path)}`;
+      const url = getApiUrl(`/view-file?path=${encodeURIComponent(path)}`);
       
       const response = await fetch(url, {
         headers: {

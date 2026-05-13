@@ -15,6 +15,7 @@ import {
   Trash2
 } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { getApiUrl } from '../lib/api';
 import BenefitsProfileModal from './BenefitsProfileModal';
 import { motion, AnimatePresence } from 'motion/react';
 import toast from 'react-hot-toast';
@@ -70,7 +71,7 @@ export default function SocialPensionManagement({
     setApplications([]); 
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("https://api-dbosca.drchiocms.com/api/social-pension", {
+      const response = await fetch(getApiUrl("/social-pension"), {
         headers: {
           "Accept": "application/json",
           "Authorization": `Bearer ${token}`
@@ -144,7 +145,7 @@ export default function SocialPensionManagement({
         disbursement_status: status,
       };
 
-      const response = await fetch(`https://api-dbosca.drchiocms.com/api/social-pension/${id}`, {
+      const response = await fetch(getApiUrl(`/social-pension/${id}`), {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -200,7 +201,7 @@ export default function SocialPensionManagement({
       const token = localStorage.getItem("token");
       
       const updatePromises = approvedSelectedIds.map(id => 
-        fetch(`https://api-dbosca.drchiocms.com/api/social-pension/${id}`, {
+        fetch(getApiUrl(`/social-pension/${id}`), {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -267,7 +268,7 @@ export default function SocialPensionManagement({
         reg_status: mapStatus(selectedStatus)
       };
 
-      const response = await fetch(`https://api-dbosca.drchiocms.com/api/social-pension/${id}`, {
+      const response = await fetch(getApiUrl(`/social-pension/${id}`), {
         method: "PUT",
         headers: {
           "Accept": "application/json",
@@ -355,8 +356,8 @@ export default function SocialPensionManagement({
       const token = localStorage.getItem("token");
       const isNew = !updatedApp.id;
       const url = isNew 
-        ? "https://api-dbosca.drchiocms.com/api/social-pension" 
-        : `https://api-dbosca.drchiocms.com/api/social-pension/${updatedApp.id}`;
+        ? getApiUrl("/social-pension") 
+        : getApiUrl(`/social-pension/${updatedApp.id}`);
       
       const mapStatus = (status: string) => {
         const s = String(status || '').toLowerCase();
@@ -411,7 +412,7 @@ export default function SocialPensionManagement({
     setIsProcessingAction(true);
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`https://api-dbosca.drchiocms.com/api/social-pension/${id}`, {
+      const response = await fetch(getApiUrl(`/social-pension/${id}`), {
         method: "DELETE",
         headers: {
           "Accept": "application/json",

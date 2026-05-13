@@ -15,6 +15,7 @@ import {
   UserCheck
 } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { getApiUrl } from '../lib/api';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface User {
@@ -57,7 +58,7 @@ export default function UserManagement() {
     setIsLoading(true);
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get("/api/proxy/dbosca/users", {
+      const response = await axios.get(getApiUrl("/proxy/dbosca/users"), {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Accept': 'application/json'
@@ -88,7 +89,7 @@ export default function UserManagement() {
     setIsSubmitting(true);
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.post("/api/proxy/dbosca/auth/register", formData, {
+      const response = await axios.post(getApiUrl("/proxy/dbosca/auth/register"), formData, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Accept': 'application/json',
@@ -125,7 +126,7 @@ export default function UserManagement() {
         role: formData.role
       };
       
-      const response = await axios.put(`/api/proxy/dbosca/users/${selectedUser.id}`, updateData, {
+      const response = await axios.put(getApiUrl(`/proxy/dbosca/users/${selectedUser.id}`), updateData, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Accept': 'application/json',
@@ -153,7 +154,7 @@ export default function UserManagement() {
     setIsSubmitting(true);
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.post(`/api/proxy/dbosca/auth/admin/reset-password/${selectedUser.id}`, {}, {
+      const response = await axios.post(getApiUrl(`/proxy/dbosca/auth/admin/reset-password/${selectedUser.id}`), {}, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Accept': 'application/json'

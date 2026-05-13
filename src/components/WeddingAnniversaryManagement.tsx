@@ -15,6 +15,7 @@ import {
   Trash2
 } from 'lucide-react';
 import { cn, normalizeWeddingIncentiveResponse } from '../lib/utils';
+import { getApiUrl } from '../lib/api';
 import BenefitsProfileModal from './BenefitsProfileModal';
 import { motion, AnimatePresence } from 'motion/react';
 import toast from 'react-hot-toast';
@@ -70,7 +71,7 @@ export default function WeddingAnniversaryManagement({
     setApplications([]); // Reset state before fetch
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("https://api-dbosca.drchiocms.com/api/wedding-anniversary-incentives", {
+      const response = await fetch(getApiUrl("/wedding-anniversary-incentives"), {
         headers: {
           "Accept": "application/json",
           "Authorization": `Bearer ${token}`
@@ -152,7 +153,7 @@ export default function WeddingAnniversaryManagement({
         disbursement_status: status,
       };
 
-      const response = await fetch(`https://api-dbosca.drchiocms.com/api/wedding-anniversary-incentives/${id}`, {
+      const response = await fetch(getApiUrl(`/wedding-anniversary-incentives/${id}`), {
         method: "POST", // Use POST with _method PUT as per other update methods in this project
         headers: {
           "Content-Type": "application/json",
@@ -210,7 +211,7 @@ export default function WeddingAnniversaryManagement({
       const token = localStorage.getItem("token");
       
       const updatePromises = approvedSelectedIds.map(id => 
-        fetch(`https://api-dbosca.drchiocms.com/api/wedding-anniversary-incentives/${id}`, {
+        fetch(getApiUrl(`/wedding-anniversary-incentives/${id}`), {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -305,7 +306,7 @@ export default function WeddingAnniversaryManagement({
       // Laravel PUT override
       fd.append("_method", "PUT");
 
-      const response = await fetch(`https://api-dbosca.drchiocms.com/api/wedding-anniversary-incentives/${id}`, {
+      const response = await fetch(getApiUrl(`/wedding-anniversary-incentives/${id}`), {
         method: "POST",
         headers: {
           "Accept": "application/json",
@@ -389,8 +390,8 @@ export default function WeddingAnniversaryManagement({
       const token = localStorage.getItem("token");
       const isNew = !updatedApp.id;
       const url = isNew 
-        ? "https://api-dbosca.drchiocms.com/api/wedding-anniversary-incentives" 
-        : `https://api-dbosca.drchiocms.com/api/wedding-anniversary-incentives/${updatedApp.id}`;
+        ? getApiUrl("/wedding-anniversary-incentives") 
+        : getApiUrl(`/wedding-anniversary-incentives/${updatedApp.id}`);
       
       let response;
       const fd = new FormData();
@@ -467,7 +468,7 @@ export default function WeddingAnniversaryManagement({
     setIsProcessingAction(true);
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`https://api-dbosca.drchiocms.com/api/wedding-anniversary-incentives/${id}`, {
+      const response = await fetch(getApiUrl(`/wedding-anniversary-incentives/${id}`), {
         method: "DELETE",
         headers: {
           "Accept": "application/json",
@@ -516,7 +517,7 @@ export default function WeddingAnniversaryManagement({
     setIsLoading(true);
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`https://api-dbosca.drchiocms.com/api/wedding-anniversary-incentives/${app.id}`, {
+      const response = await fetch(getApiUrl(`/wedding-anniversary-incentives/${app.id}`), {
         headers: {
           "Accept": "application/json",
           "Authorization": `Bearer ${token}`

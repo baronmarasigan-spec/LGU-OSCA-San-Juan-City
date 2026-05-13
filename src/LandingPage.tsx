@@ -1,23 +1,8 @@
 import React, { useState } from 'react';
-import { 
-  ArrowRight, 
-  ChevronRight, 
-  Heart, 
-  IdCard, 
-  Wallet, 
-  Percent, 
-  MapPin, 
-  Phone, 
-  Mail, 
-  Clock,
-  User,
-  ShieldCheck,
-  X,
-  Eye,
-  EyeOff
-} from 'lucide-react';
+import { Eye, EyeOff, User, Phone, Mail, MapPin, X, ArrowRight, ShieldCheck, Heart, IdCard, Wallet, Percent, ChevronRight, Clock } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from './lib/utils';
+import { getApiUrl } from './lib/api';
 
 export default function LandingPage({ 
   onStartRegistration, 
@@ -67,7 +52,7 @@ export default function LandingPage({
         return;
       }
 
-      const res = await fetch("https://api-dbosca.drchiocms.com/api/auth/login", {
+      const res = await fetch(getApiUrl("/auth/login"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

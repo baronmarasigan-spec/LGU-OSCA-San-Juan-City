@@ -12,6 +12,7 @@ import {
   Eye
 } from 'lucide-react';
 import { cn, exportToCSV } from '../lib/utils';
+import { getApiUrl } from '../lib/api';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface FeedbackItem {
@@ -88,7 +89,7 @@ export default function FeedbackConcern() {
     setError('');
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("https://api-dbosca.drchiocms.com/api/feedback-concerns", {
+      const response = await fetch(getApiUrl("/feedback-concerns"), {
         headers: {
           "Authorization": `Bearer ${token}`,
           "Accept": "application/json"
@@ -166,7 +167,7 @@ export default function FeedbackConcern() {
     setIsSubmittingResponse(true);
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`https://api-dbosca.drchiocms.com/api/feedback-concerns/${selectedItem.id}`, {
+      const response = await fetch(getApiUrl(`/feedback-concerns/${selectedItem.id}`), {
         method: "PUT",
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -198,7 +199,7 @@ export default function FeedbackConcern() {
   const updateStatus = async (item: FeedbackItem, newStatus: string) => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`https://api-dbosca.drchiocms.com/api/feedback-concerns/${item.id}`, {
+      const response = await fetch(getApiUrl(`/feedback-concerns/${item.id}`), {
         method: "PUT",
         headers: {
           "Authorization": `Bearer ${token}`,

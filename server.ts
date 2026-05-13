@@ -32,10 +32,12 @@ async function startServer() {
   // Proxy Leak Detector - Removed
 
   // DBOSCA Proxy (Generic) - Using root-level middleware with pathFilter to ensure correct path rewriting
+  const apiTarget = process.env.API_TARGET_URL || "https://api-dbosca.drchiocms.com";
+  
   app.use(
     createProxyMiddleware({
       pathFilter: "/api/proxy/dbosca",
-      target: "https://api-dbosca.drchiocms.com",
+      target: apiTarget,
       changeOrigin: true,
       pathRewrite: {
         "^/api/proxy/dbosca": "/api",
